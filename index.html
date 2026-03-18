@@ -5,56 +5,188 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Birdie! - Golfbollar</title>
   <style>
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8faf9; color: #1a1a1a; overflow-x: hidden; }
+    :root {
+      --accent: #2c3e50; /* Elegant mörk färg istället för grönt */
+      --text-dark: #1a1a1a;
+      --bg-light: #f4f7f6;
+    }
 
-    header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; animation: fadeIn 1s ease; }
+    body { 
+      margin: 0; 
+      font-family: 'Inter', -apple-system, sans-serif; 
+      background: var(--bg-light); 
+      color: var(--text-dark); 
+      overflow-x: hidden; 
+    }
+
+    /* Header & Navigation */
+    header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 15px 40px; 
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05); 
+      position: sticky; 
+      top: 0; 
+      z-index: 1000; 
+      animation: slideDown 0.8s ease;
+    }
+
     .logo { display: flex; align-items: center; gap: 15px; }
-    .logo img { height: 70px; transition: transform 0.3s ease; }
-    .logo img:hover { transform: scale(1.1); }
+    .logo img { height: 60px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .logo img:hover { transform: rotate(5deg) scale(1.1); }
 
-    nav { display: flex; gap: 30px; align-items: center; }
-    nav a { text-decoration: none; color: #333; font-weight: 500; position: relative; }
-    nav a::after { content: ""; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: black; transition: 0.3s; }
+    nav { display: flex; gap: 30px; }
+    nav a { 
+      text-decoration: none; 
+      color: var(--text-dark); 
+      font-weight: 600; 
+      font-size: 0.95rem;
+      position: relative; 
+      transition: 0.3s;
+    }
+    nav a::after { 
+      content: ""; 
+      position: absolute; 
+      bottom: -5px; 
+      left: 0; 
+      width: 0; 
+      height: 2px; 
+      background: var(--accent); 
+      transition: 0.3s; 
+    }
     nav a:hover::after { width: 100%; }
 
+    /* Hero Section */
     .hero {
-      height: 60vh;
+      height: 70vh;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       text-align: center;
       background: url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg') center/cover no-repeat;
+      background-attachment: fixed; /* Parallax-effekt */
       color: white;
       position: relative;
     }
-    .hero::before { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.5); }
-    .hero * { position:relative; z-index:1; }
+    .hero::before { 
+      content:""; 
+      position:absolute; 
+      inset:0; 
+      background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)); 
+    }
+    .hero h2 { 
+      font-size: 3.5rem; 
+      margin: 0; 
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+      animation: fadeInUp 1s ease forwards;
+    }
+    .hero p { 
+      font-size: 1.4rem; 
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.3s forwards;
+    }
 
-    .products { padding: 60px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: auto; }
+    /* Products Grid */
+    .products { 
+      padding: 80px 20px; 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 30px; 
+      max-width: 1200px; 
+      margin: auto; 
+    }
 
-    .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); transition: 0.3s; opacity:0; transform:translateY(30px); }
-    .card.show { opacity:1; transform:translateY(0); }
-    .card:hover { transform:translateY(-8px); }
+    .card { 
+      background: white; 
+      border-radius: 20px; 
+      padding: 30px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+      transition: all 0.4s ease; 
+      opacity: 0; 
+      transform: translateY(40px);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    .card.show { opacity: 1; transform: translateY(0); }
+    .card:hover { 
+      transform: translateY(-12px); 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+    }
 
-    .price-tag { margin: 15px 0; }
-    .price-row { display:flex; justify-content:space-between; }
-    .price-label { color:#666; }
-    .price-value { font-weight:bold; }
+    .card h3 { margin-top: 0; color: var(--accent); font-size: 1.4rem; }
 
-    .old-price { font-size:0.8rem; color:#999; text-decoration:line-through; }
-    .contact { margin-top:10px; font-weight:500; }
+    .price-tag { 
+      margin: 20px 0; 
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 12px;
+    }
+    .price-row { 
+      display: flex; 
+      justify-content: space-between; 
+      margin-bottom: 8px;
+    }
+    .price-row:last-child { margin-bottom: 0; }
+    .price-label { color: #666; font-size: 0.9rem; }
+    .price-value { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); }
 
-    footer { text-align:center; padding:40px; color:#777; }
+    .old-price { 
+      font-size: 0.85rem; 
+      color: #b32d2d; /* Rödaktig för att visa sänkning */
+      text-decoration: line-through; 
+      margin-bottom: 5px;
+      display: block;
+    }
 
-    @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+    .contact { 
+      margin-top: 20px; 
+      font-weight: 600; 
+      color: var(--accent);
+      background: rgba(44, 62, 80, 0.05);
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      transition: 0.3s;
+    }
+    .card:hover .contact {
+      background: var(--accent);
+      color: white;
+    }
+
+    footer { 
+      text-align: center; 
+      padding: 60px 20px; 
+      color: #999; 
+      background: #fff;
+      border-top: 1px solid #eee;
+    }
+
+    /* Animations */
+    @keyframes slideDown {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobilanpassning */
+    @media (max-width: 600px) {
+      .hero h2 { font-size: 2.2rem; }
+      header { padding: 15px 20px; }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand">
+    <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand" alt="Logo">
     <strong>Birdie!</strong>
   </div>
   <nav>
@@ -70,13 +202,12 @@
 </section>
 
 <section id="produkter" class="products">
-
   <div class="card">
     <h3>Titleist Pro V1</h3>
-    <span class="old-price">Nypris ca 600–650 kr</span>
+    <span class="old-price">Nypris ca 625 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>20 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>200 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">20 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">200 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
@@ -85,28 +216,28 @@
     <h3>Titleist Pro V1x</h3>
     <span class="old-price">Nypris ca 600 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>20 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>200 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">20 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">200 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Callaway Chrome Soft</h3>
-    <span class="old-price">Nypris ca 600–650 kr</span>
+    <span class="old-price">Nypris ca 625 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>18 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>180 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">18 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">180 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>TaylorMade TP5</h3>
-    <span class="old-price">Nypris ca 500–600 kr</span>
+    <span class="old-price">Nypris ca 550 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>18 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>180 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">18 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">180 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
@@ -115,8 +246,8 @@
     <h3>Srixon Z-Star</h3>
     <span class="old-price">Nypris ca 500 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>15 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>150 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">15 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">150 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
@@ -125,8 +256,8 @@
     <h3>Titleist Velocity</h3>
     <span class="old-price">Nypris ca 240 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>8 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>80 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">8 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">80 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
@@ -135,8 +266,8 @@
     <h3>Pinnacle Rush</h3>
     <span class="old-price">Nypris ca 200 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>6 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>60 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">6 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">60 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
@@ -145,27 +276,35 @@
     <h3>Top Flite XL Control</h3>
     <span class="old-price">Nypris ca 180 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span>5 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span>50 kr</span></div>
+      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">5 kr</span></div>
+      <div class="price-row"><span class="price-label">Per dussin:</span><span class="price-value">50 kr</span></div>
     </div>
     <div class="contact">Beställ: 073-535 24 82</div>
   </div>
-
 </section>
 
 <footer id="kontakt">
   <p>📞 Ring eller SMSa: 073-535 24 82</p>
-  <p>© 2026 Birdie!</p>
+  <p>© 2026 Birdie! Golfbollar</p>
 </footer>
 
 <script>
-const cards = document.querySelectorAll('.card');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('show');
-  });
-});
-cards.forEach(card => observer.observe(card));
+  const cards = document.querySelectorAll('.card');
+  
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px"
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      }
+    });
+  }, observerOptions);
+
+  cards.forEach(card => observer.observe(card));
 </script>
 
 </body>
