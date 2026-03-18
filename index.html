@@ -6,9 +6,11 @@
   <title>Birdie! - Golfbollar</title>
   <style>
     :root {
-      --accent: #2c3e50; /* Elegant mörk färg istället för grönt */
+      --accent: #2c3e50;
       --text-dark: #1a1a1a;
       --bg-light: #f4f7f6;
+      --white: #ffffff;
+      --danger: #e74c3c;
     }
 
     body { 
@@ -17,9 +19,10 @@
       background: var(--bg-light); 
       color: var(--text-dark); 
       overflow-x: hidden; 
+      scroll-behavior: smooth;
     }
 
-    /* Header & Navigation */
+    /* Header */
     header { 
       display: flex; 
       align-items: center; 
@@ -35,170 +38,119 @@
     }
 
     .logo { display: flex; align-items: center; gap: 15px; }
-    .logo img { height: 60px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .logo img:hover { transform: rotate(5deg) scale(1.1); }
+    .logo img { height: 60px; transition: 0.3s; }
+    .logo img:hover { transform: scale(1.1); }
 
     nav { display: flex; gap: 30px; }
-    nav a { 
-      text-decoration: none; 
-      color: var(--text-dark); 
-      font-weight: 600; 
-      font-size: 0.95rem;
-      position: relative; 
-      transition: 0.3s;
-    }
-    nav a::after { 
-      content: ""; 
-      position: absolute; 
-      bottom: -5px; 
-      left: 0; 
-      width: 0; 
-      height: 2px; 
-      background: var(--accent); 
-      transition: 0.3s; 
-    }
-    nav a:hover::after { width: 100%; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
+    nav a:hover { color: var(--danger); }
 
-    /* Hero Section */
+    /* Frakt-banner */
+    .no-shipping-banner {
+      background: var(--danger);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Hero - JUSTERAD HÄR */
     .hero {
-      height: 70vh;
+      height: 100vh; /* Något högre för att se mer av bilden */
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       text-align: center;
-      background: url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg') center/cover no-repeat;
-      background-attachment: fixed; /* Parallax-effekt */
+      /* Ändrat från 'center' till 'center 20%' för att sänka ner bilden */
+      background: url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg') center 20%/cover no-repeat;
+      background-attachment: fixed;
       color: white;
       position: relative;
     }
-    .hero::before { 
-      content:""; 
-      position:absolute; 
-      inset:0; 
-      background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)); 
-    }
-    .hero h2 { 
-      font-size: 3.5rem; 
-      margin: 0; 
-      text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-      animation: fadeInUp 1s ease forwards;
-    }
-    .hero p { 
-      font-size: 1.4rem; 
-      opacity: 0;
-      animation: fadeInUp 1s ease 0.3s forwards;
-    }
+    .hero::before { content:""; position:absolute; inset:0; background: rgba(0,0,0,0.4); }
+    .hero * { position:relative; z-index:1; }
+    .hero h2 { font-size: 3.5rem; margin: 0; animation: fadeInUp 1s ease; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .hero p { font-size: 1.2rem; font-weight: 500; }
 
     /* Products Grid */
     .products { 
-      padding: 80px 20px; 
+      padding: 60px 20px; 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-      gap: 30px; 
+      gap: 25px; 
       max-width: 1200px; 
       margin: auto; 
     }
 
     .card { 
-      background: white; 
+      background: var(--white); 
       border-radius: 20px; 
-      padding: 30px; 
+      padding: 25px; 
       box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-      transition: all 0.4s ease; 
+      transition: 0.4s ease; 
       opacity: 0; 
-      transform: translateY(40px);
-      border: 1px solid rgba(0,0,0,0.03);
+      transform: translateY(30px);
+      display: flex;
+      flex-direction: column;
     }
     .card.show { opacity: 1; transform: translateY(0); }
-    .card:hover { 
-      transform: translateY(-12px); 
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
-    }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
-    .card h3 { margin-top: 0; color: var(--accent); font-size: 1.4rem; }
-
-    .price-tag { 
-      margin: 20px 0; 
-      padding: 15px;
-      background: #f9f9f9;
-      border-radius: 12px;
-    }
-    .price-row { 
-      display: flex; 
-      justify-content: space-between; 
-      margin-bottom: 8px;
-    }
-    .price-row:last-child { margin-bottom: 0; }
-    .price-label { color: #666; font-size: 0.9rem; }
-    .price-value { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); }
-
-    .old-price { 
-      font-size: 0.85rem; 
-      color: #b32d2d; /* Rödaktig för att visa sänkning */
-      text-decoration: line-through; 
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    .contact { 
-      margin-top: 20px; 
-      font-weight: 600; 
-      color: var(--accent);
-      background: rgba(44, 62, 80, 0.05);
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      transition: 0.3s;
-    }
-    .card:hover .contact {
-      background: var(--accent);
-      color: white;
-    }
-
-    footer { 
+    .price-tag { margin: 15px 0; padding: 12px; background: #f8f9fa; border-radius: 12px; flex-grow: 1; }
+    .price-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .price-value { font-weight: 800; color: var(--accent); }
+    .old-price { font-size: 0.8rem; color: #999; text-decoration: line-through; display: block; margin-bottom: 5px; }
+    
+    .contact-btn { 
+      margin-top: 15px; 
+      background: var(--accent); 
+      color: white; 
+      padding: 12px; 
+      border-radius: 10px; 
       text-align: center; 
-      padding: 60px 20px; 
-      color: #999; 
-      background: #fff;
-      border-top: 1px solid #eee;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
     }
 
-    /* Animations */
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
-    }
+    /* FAQ Section */
+    .faq-section { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+    .faq-item { background: white; margin-bottom: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+    .faq-question { padding: 20px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; }
+    .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: #666; }
+    .faq-item.active .faq-answer { padding: 0 20px 20px 20px; max-height: 200px; }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    footer { text-align: center; padding: 50px; background: white; border-top: 1px solid #eee; }
 
-    /* Mobilanpassning */
-    @media (max-width: 600px) {
-      .hero h2 { font-size: 2.2rem; }
-      header { padding: 15px 20px; }
-    }
+    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
 <header>
   <div class="logo">
-    <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand" alt="Logo">
+    <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand" alt="Birdie Logo">
     <strong>Birdie!</strong>
   </div>
   <nav>
-    <a href="#">Hem</a>
-    <a href="#produkter">Produkter</a>
+    <a href="#produkter">Bollar</a>
+    <a href="#faq">FAQ</a>
     <a href="#kontakt">Kontakt</a>
   </nav>
 </header>
 
+<div class="no-shipping-banner">
+  ⚠️ Ingen frakt tillgänglig än – Endast avhämtning i Anderstorp!
+</div>
+
 <section class="hero">
-  <h2>Spela bättre. Betala mindre.</h2>
-  <p>Premium golfbollar från kända märken</p>
+  <h2>Birdie!</h2>
+  <p>Premium golfbollar. Anderstorp.</p>
 </section>
 
 <section id="produkter" class="products">
@@ -206,105 +158,119 @@
     <h3>Titleist Pro V1</h3>
     <span class="old-price">Nypris ca 625 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">20 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">200 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">20 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">200 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Titleist Pro V1x</h3>
     <span class="old-price">Nypris ca 600 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">20 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">200 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">20 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">200 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Callaway Chrome Soft</h3>
     <span class="old-price">Nypris ca 625 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">18 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">180 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">18 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">180 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>TaylorMade TP5</h3>
     <span class="old-price">Nypris ca 550 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">18 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">180 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">18 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">180 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Srixon Z-Star</h3>
     <span class="old-price">Nypris ca 500 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">15 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">150 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">15 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">150 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Titleist Velocity</h3>
     <span class="old-price">Nypris ca 240 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">8 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">80 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">8 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">80 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
     <h3>Pinnacle Rush</h3>
     <span class="old-price">Nypris ca 200 kr</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">6 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">60 kr</span></div>
+      <div class="price-row"><span>Per boll:</span><span class="price-value">6 kr</span></div>
+      <div class="price-row"><span>Per dussin:</span><span class="price-value">60 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
   </div>
 
   <div class="card">
-    <h3>Top Flite XL Control</h3>
-    <span class="old-price">Nypris ca 180 kr</span>
+    <h3>Övningsbollar</h3>
+    <span class="old-price">Blandade märken</span>
     <div class="price-tag">
-      <div class="price-row"><span class="price-label">Per boll:</span><span class="price-value">5 kr</span></div>
-      <div class="price-row"><span class="price-label">Per dussin (12):</span><span class="price-value">50 kr</span></div>
+      <div class="price-row"><span>Antal:</span><span class="price-value">30 st</span></div>
+      <div class="price-row"><span>Paketpris:</span><span class="price-value">50 kr</span></div>
     </div>
-    <div class="contact">Beställ: 073-535 24 82</div>
+    <div class="contact-btn">Ring/SMS: 073-535 24 82</div>
+  </div>
+</section>
+
+<section id="faq" class="faq-section">
+  <h2 style="text-align:center">Vanliga frågor</h2>
+  <div class="faq-item">
+    <div class="faq-question">Erbjuder ni frakt? <span>+</span></div>
+    <div class="faq-answer">Nej, tyvärr inte än. Just nu gäller endast avhämtning i Anderstorp. Vi meddelar på sidan så fort frakt blir tillgängligt!</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Hur betalar jag? <span>+</span></div>
+    <div class="faq-answer">Betalning sker enkelt och säkert via Swish vid avhämtning.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Var i Anderstorp finns ni? <span>+</span></div>
+    <div class="faq-answer">Kontakta oss på 073-535 24 82 för exakt adress och för att bestämma en tid för upphämtning.</div>
   </div>
 </section>
 
 <footer id="kontakt">
-  <p>📞 Ring eller SMSa: 073-535 24 82</p>
+  <p>📞 073-535 24 82 | Anderstorp</p>
   <p>© 2026 Birdie! Golfbollar</p>
 </footer>
 
 <script>
-  const cards = document.querySelectorAll('.card');
-  
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -50px 0px"
-  };
-
+  // Scroll-animation
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('show');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('show');
     });
-  }, observerOptions);
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
-  cards.forEach(card => observer.observe(card));
+  // FAQ-klick
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      q.parentElement.classList.toggle('active');
+    });
+  });
 </script>
 
 </body>
