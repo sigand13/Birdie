@@ -25,7 +25,6 @@
       scroll-behavior: smooth;
     }
 
-    /* Header */
     header { 
       display: flex; 
       align-items: center; 
@@ -46,7 +45,6 @@
     nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
     nav a:hover { color: var(--danger); }
 
-    /* Dynamisk Banner */
     #info-banner {
       background: var(--danger);
       color: white;
@@ -58,7 +56,6 @@
       letter-spacing: 1px;
     }
 
-    /* Hero */
     .hero {
       height: 35vh; 
       display: flex;
@@ -73,7 +70,6 @@
     }
     .hero h2 { font-size: 3.5rem; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 
-    /* Filter */
     .filter-container { text-align: center; padding: 40px 20px 10px; }
     .filter-btn {
       padding: 10px 22px;
@@ -87,7 +83,6 @@
     }
     .filter-btn.active, .filter-btn:hover { background: var(--accent); color: white; }
 
-    /* Grid */
     .products { 
       padding: 20px; 
       display: grid; 
@@ -112,7 +107,6 @@
     .card.show { opacity: 1; transform: translateY(0); }
     .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
 
-    /* Bilder */
     .product-img-wrapper {
       width: 100%;
       height: 180px;
@@ -126,12 +120,16 @@
     }
     .product-img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
-    /* Tags & Alerts */
     .tag-container { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
 
     .condition-tag {
       background: var(--success); color: white; padding: 4px 10px; border-radius: 6px;
       font-size: 0.7rem; font-weight: bold; text-transform: uppercase;
+    }
+
+    .stock-tag {
+      background: #eee; color: #555; padding: 4px 10px; border-radius: 6px;
+      font-size: 0.7rem; font-weight: bold;
     }
 
     .low-stock-alert {
@@ -146,7 +144,6 @@
 
     @keyframes blinker { 50% { opacity: 0.5; } }
 
-    /* Deal / Special */
     .deal-card { border: 2px solid var(--gold) !important; background: #fffdf5 !important; }
     .deal-badge {
       position: absolute; top: -12px; right: 15px; background: var(--gold); color: #000;
@@ -168,19 +165,8 @@
       background: var(--accent); padding: 12px; border-radius: 10px; text-align: center; transition: 0.3s;
     }
     .contact-btn a { color: white !important; text-decoration: none; font-weight: 600; display: block; }
-    .contact-btn:hover { background: #34495e; }
-
-    /* FAQ */
-    .faq-section { max-width: 800px; margin: 60px auto; padding: 0 20px; }
-    .faq-item { background: white; margin-bottom: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .faq-question { padding: 20px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; }
-    .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: #666; }
-    .faq-item.active .faq-answer { padding: 0 20px 20px 20px; max-height: 200px; }
 
     footer { text-align: center; padding: 50px; background: white; border-top: 1px solid #eee; }
-
-    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -193,12 +179,11 @@
   <nav>
     <a href="#produkter">Bollar</a>
     <a href="about.html">Om oss</a>
-    <a href="#faq">FAQ</a>
     <a href="#kontakt">Kontakt</a>
   </nav>
 </header>
 
-<div id="info-banner">Laddar senaste nytt...</div>
+<div id="info-banner">Välkommen till Birdie!</div>
 
 <section class="hero">
   <h2>Birdie!</h2>
@@ -214,18 +199,6 @@
 <div id="loading-spinner" style="text-align:center; padding:50px; font-weight:bold;">Hämtar aktuellt lager...</div>
 <section id="produkter" class="products"></section>
 
-<section id="faq" class="faq-section">
-  <h2 style="text-align:center">Vanliga frågor</h2>
-  <div class="faq-item">
-    <div class="faq-question">Hur köper jag bollar? <span>+</span></div>
-    <div class="faq-answer">Ring eller SMS:a oss på 073-535 24 82 för att bestämma tid för avhämtning i Anderstorp.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-question">Hur betalar jag? <span>+</span></div>
-    <div class="faq-answer">Vi tar endast emot Swish-betalningar vid avhämtning.</div>
-  </div>
-</section>
-
 <footer id="kontakt">
   <p>📞 <a href="tel:0735352482" style="color:inherit; text-decoration:none;">073-535 24 82</a> | Anderstorp</p>
   <p>© 2026 Birdie! Golfbollar | <a href="about.html" style="color: #666; text-decoration: none;">Om oss</a></p>
@@ -240,7 +213,7 @@
       const data = await response.text();
       const rows = data.split('\n').filter(row => row.trim() !== '');
       
-      // Hämta Banner-text från rad 2, kolumn K
+      // Hämta Banner-text från rad 2, kolumn K (index 10)
       const bannerCols = rows[1] ? (rows[1].includes(';') ? rows[1].split(';') : rows[1].split(',')) : [];
       const bannerText = bannerCols[10] ? bannerCols[10].replace(/^"|"$/g, '').trim() : "Välkommen till Birdie!";
       document.getElementById('info-banner').innerText = bannerText;
@@ -250,25 +223,25 @@
       container.innerHTML = '';
       document.getElementById('loading-spinner').style.display = 'none';
 
-      productRows.forEach((row, index) => {
+      productRows.forEach((row) => {
         const columns = row.includes(';') ? row.split(';') : row.split(',');
-        if (columns.length < 6) return;
-
         const clean = (t) => t ? t.trim().replace(/^"|"$/g, '') : '';
         
         const namn = clean(columns[0]);
+        
+        // SÄKERHETSSPÄRR: Om namnet är tomt, hoppa över raden
+        if (!namn || namn === "") return;
+
         const nypris = clean(columns[1]);
         const styck = clean(columns[2]);
         const dussin = clean(columns[3]);
         const kat = clean(columns[4]);
-        const lager = clean(columns[5]); // Kolumn F
+        const lager = clean(columns[5]);
         const skick = clean(columns[6]);
-        const special = clean(columns[7]); // Kolumn H
-        const bildUrl = clean(columns[8]); // Kolumn I
+        const special = clean(columns[7]); 
+        const bildUrl = clean(columns[8]); 
 
         const isOutOfStock = lager.toLowerCase().includes('slut') || lager === '0';
-        
-        // Logik för "Snart slut"
         const stockCount = parseInt(lager);
         const isLowStock = !isNaN(stockCount) && stockCount > 0 && stockCount <= 10;
         
@@ -287,7 +260,8 @@
           
           <div class="tag-container">
             ${skick ? `<div class="condition-tag">${skick}</div>` : ''}
-            ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (${lager} kvar)</div>` : ''}
+            ${!isOutOfStock && !isLowStock && !isNaN(stockCount) ? `<div class="stock-tag">Finns ${lager} st</div>` : ''}
+            ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (Finns ${lager} st)</div>` : ''}
           </div>
           
           ${isOutOfStock ? `<div class="out-of-stock-label">SLUT I LAGER</div>` : ''}
@@ -304,14 +278,13 @@
         container.appendChild(card);
       });
 
-      // Animationer vid scroll
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
       }, { threshold: 0.1 });
       document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
     } catch (error) {
-      document.getElementById('loading-spinner').innerText = "Kunde inte ladda lagret just nu.";
+      document.getElementById('loading-spinner').innerText = "Kunde inte ladda lagret.";
     }
   }
 
@@ -323,11 +296,6 @@
       card.style.display = (category === 'all' || cardCat === category) ? "flex" : "none";
     });
   }
-
-  document.addEventListener('click', (e) => {
-    const q = e.target.closest('.faq-question');
-    if (q) q.parentElement.classList.toggle('active');
-  });
 
   fetchLager();
 </script>
