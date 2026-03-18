@@ -11,6 +11,7 @@
       --bg-light: #f4f7f6;
       --white: #ffffff;
       --danger: #e74c3c;
+      --success: #27ae60;
     }
 
     body { 
@@ -57,7 +58,7 @@
       letter-spacing: 1px;
     }
 
-    /* Hero - Optimerad för att se golfaren */
+    /* Hero */
     .hero {
       height: 45vh; 
       display: flex;
@@ -74,11 +75,24 @@
     .hero::before { content:""; position:absolute; inset:0; background: rgba(0,0,0,0.4); }
     .hero * { position:relative; z-index:1; }
     .hero h2 { font-size: 3.5rem; margin: 0; animation: fadeInUp 1s ease; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-    .hero p { font-size: 1.2rem; font-weight: 500; }
+
+    /* Filters */
+    .filter-container { text-align: center; padding: 40px 20px 0px; }
+    .filter-btn {
+      padding: 10px 22px;
+      border: 2px solid var(--accent);
+      background: transparent;
+      cursor: pointer;
+      border-radius: 25px;
+      font-weight: 600;
+      margin: 5px;
+      transition: 0.3s;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--accent); color: white; }
 
     /* Products Grid */
     .products { 
-      padding: 60px 20px; 
+      padding: 40px 20px; 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
       gap: 25px; 
@@ -92,20 +106,34 @@
       padding: 25px; 
       box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
       transition: 0.4s ease; 
-      opacity: 0; 
-      transform: translateY(30px);
       display: flex;
       flex-direction: column;
+      opacity: 0;
+      transform: translateY(30px);
     }
     .card.show { opacity: 1; transform: translateY(0); }
     .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+
+    .condition-tag {
+      background: var(--success);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      width: fit-content;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .out-of-stock { opacity: 0.6; filter: grayscale(1); pointer-events: none; }
+    .out-of-stock-label { color: var(--danger); font-weight: bold; margin-bottom: 5px; }
 
     .price-tag { margin: 15px 0; padding: 12px; background: #f8f9fa; border-radius: 12px; flex-grow: 1; }
     .price-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
     .price-value { font-weight: 800; color: var(--accent); }
     .old-price { font-size: 0.8rem; color: #999; text-decoration: line-through; display: block; margin-bottom: 5px; }
     
-    /* Kontaktknapp med fix för telefonnummer-färg */
     .contact-btn { 
       margin-top: 15px; 
       background: var(--accent); 
@@ -113,15 +141,10 @@
       border-radius: 10px; 
       text-align: center; 
       font-weight: 600;
-      font-size: 0.9rem;
       transition: 0.3s;
     }
     .contact-btn:hover { background: #34495e; }
-    .contact-btn a {
-      color: white !important;
-      text-decoration: none !important;
-      display: block;
-    }
+    .contact-btn a { color: white !important; text-decoration: none !important; display: block; }
 
     /* FAQ Section */
     .faq-section { max-width: 800px; margin: 60px auto; padding: 0 20px; }
@@ -131,6 +154,8 @@
     .faq-item.active .faq-answer { padding: 0 20px 20px 20px; max-height: 200px; }
 
     footer { text-align: center; padding: 50px; background: white; border-top: 1px solid #eee; }
+
+    #loading-spinner { text-align: center; padding: 50px; font-weight: bold; }
 
     @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -160,107 +185,14 @@
   <p>Premium golfbollar. Anderstorp.</p>
 </section>
 
-<section id="produkter" class="products">
-  <div class="card">
-    <h3>Titleist Pro V1</h3>
-    <span class="old-price">Nypris ca 625 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">20 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">200 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
+<div class="filter-container">
+  <button class="filter-btn active" onclick="filterBolls('all', this)">Alla</button>
+  <button class="filter-btn" onclick="filterBolls('premium', this)">Premium</button>
+  <button class="filter-btn" onclick="filterBolls('prisvard', this)">Prisvärda</button>
+</div>
 
-  <div class="card">
-    <h3>Titleist Pro V1x</h3>
-    <span class="old-price">Nypris ca 600 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">20 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">200 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Callaway Chrome Soft</h3>
-    <span class="old-price">Nypris ca 625 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">18 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">180 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>TaylorMade TP5</h3>
-    <span class="old-price">Nypris ca 550 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">18 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">180 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Vice (Pro/Tour)</h3>
-    <span class="old-price">Efterfrågad favorit</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">15 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">150 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Wilson Staff</h3>
-    <span class="old-price">Stort lager - Prisvärd!</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">10 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">100 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Srixon Z-Star</h3>
-    <span class="old-price">Nypris ca 500 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">15 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">150 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Titleist Velocity</h3>
-    <span class="old-price">Nypris ca 240 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">8 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">80 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Pinnacle Rush</h3>
-    <span class="old-price">Nypris ca 200 kr</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Per boll:</span><span class="price-value">6 kr</span></div>
-      <div class="price-row"><span>Per dussin:</span><span class="price-value">60 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-
-  <div class="card">
-    <h3>Övningsbollar</h3>
-    <span class="old-price">Blandade märken</span>
-    <div class="price-tag">
-      <div class="price-row"><span>Antal:</span><span class="price-value">30 st</span></div>
-      <div class="price-row"><span>Paketpris:</span><span class="price-value">50 kr</span></div>
-    </div>
-    <div class="contact-btn"><a href="tel:0735352482">Ring/SMS: 073-535 24 82</a></div>
-  </div>
-</section>
+<div id="loading-spinner">Hämtar aktuellt lager...</div>
+<section id="produkter" class="products"></section>
 
 <section id="faq" class="faq-section">
   <h2 style="text-align:center">Vanliga frågor</h2>
@@ -284,20 +216,90 @@
 </footer>
 
 <script>
-  // Scroll-animation för korten
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('show');
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.card').forEach(card => observer.observe(card));
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRt7R8D1L1dUqZPpeHEtKf78BRRHYCMekm_j0a6ttC9Dzb5kiPWh7c5bKFpGXx5CJq_ZCB-HNzQV6Pv/pub?output=csv'; 
 
-  // FAQ-funktionalitet
-  document.querySelectorAll('.faq-question').forEach(q => {
-    q.addEventListener('click', () => {
-      q.parentElement.classList.toggle('active');
+  async function fetchLager() {
+    try {
+      const response = await fetch(SHEET_CSV_URL);
+      const data = await response.text();
+      const rows = data.split('\n').filter(row => row.trim() !== '').slice(1);
+      
+      const container = document.getElementById('produkter');
+      container.innerHTML = '';
+      document.getElementById('loading-spinner').style.display = 'none';
+
+      rows.forEach((row) => {
+        const columns = row.includes(';') ? row.split(';') : row.split(',');
+        if (columns.length < 6) return;
+
+        const clean = (text) => text ? text.trim().replace(/^"|"$/g, '') : '';
+        
+        const namn = clean(columns[0]);
+        const nypris = clean(columns[1]);
+        const styck = clean(columns[2]);
+        const dussin = clean(columns[3]);
+        const kat = clean(columns[4]);
+        const lager = clean(columns[5]);
+        const skick = clean(columns[6]);
+
+        const isOutOfStock = lager.toLowerCase().includes('slut');
+
+        const card = document.createElement('div');
+        card.className = `card ${isOutOfStock ? 'out-of-stock' : ''}`;
+        card.setAttribute('data-category', kat.toLowerCase());
+
+        card.innerHTML = `
+          ${skick ? `<div class="condition-tag">${skick}</div>` : ''}
+          ${isOutOfStock ? `<div class="out-of-stock-label">SLUT I LAGER</div>` : ''}
+          <h3>${namn}</h3>
+          <span class="old-price">${nypris.includes('ca') ? nypris : 'Nypris ca ' + nypris}</span>
+          <div class="price-tag">
+            <div class="price-row"><span>Per boll:</span><span class="price-value">${styck}</span></div>
+            <div class="price-row"><span>Per dussin:</span><span class="price-value">${dussin}</span></div>
+          </div>
+          <div class="contact-btn"><a href="tel:0735352482">${isOutOfStock ? 'Slut' : 'Ring/SMS: 073-535 24 82'}</a></div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Starta observern efter att korten skapats
+      startObserver();
+    } catch (error) {
+      console.error("Lagerfel:", error);
+      document.getElementById('loading-spinner').innerText = "Kunde inte ladda lagret.";
+    }
+  }
+
+  function startObserver() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.card').forEach(card => observer.observe(card));
+  }
+
+  function filterBolls(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    document.querySelectorAll('.card').forEach(card => {
+      const cardCat = card.getAttribute('data-category');
+      if (category === 'all' || cardCat === category) {
+        card.style.display = "flex";
+      } else {
+        card.style.display = "none";
+      }
     });
+  }
+
+  // FAQ
+  document.addEventListener('click', (e) => {
+    const q = e.target.closest('.faq-question');
+    if (q) q.parentElement.classList.toggle('active');
   });
+
+  fetchLager();
 </script>
 
 </body>
