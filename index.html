@@ -19,9 +19,24 @@
 
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-light); color: var(--text-dark); overflow-x: hidden; scroll-behavior: smooth; }
 
-    header { display: flex; align-items: center; justify-content: space-between; padding: 15px 40px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+    /* Fixad Meny */
+    header { 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 15px 40px; 
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(10px); 
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05); 
+      position: sticky; 
+      top: 0; 
+      z-index: 1000; 
+    }
     .logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; }
     .logo img { height: 60px; }
+    nav { display: flex; gap: 30px; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
+    nav a:hover { color: var(--danger); }
 
     #info-banner { background: var(--danger); color: white; text-align: center; padding: 12px; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
 
@@ -29,16 +44,14 @@
 
     .products { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: auto; }
     
-    .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s ease; display: flex; flex-direction: column; opacity: 0; transform: translateY(20px); position: relative; }
-    .card.show { opacity: 1; transform: translateY(0); }
+    .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s ease; display: flex; flex-direction: column; position: relative; }
+    .card.fade-in { opacity: 1; transform: translateY(0); }
     .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
     .restock-card { border: 2px solid var(--restock) !important; }
 
     .tag-container { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
     .condition-tag { background: var(--success); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
     .restock-tag { background: var(--restock); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
-    
-    /* Varningen som blinkar mellan 12 och 20 bollar */
     .low-stock-alert { background: var(--warning); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.5; } }
 
@@ -50,7 +63,7 @@
     .contact-btn a { color: white !important; text-decoration: none; font-weight: 600; display: block; }
     .btn-disabled { background: #95a5a6 !important; cursor: not-allowed; }
 
-    /* Senast sålda Popup */
+    /* Popup */
     #sales-popup { position: fixed; bottom: -100px; left: 20px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; z-index: 2000; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 300px; border-left: 5px solid var(--success); }
     #sales-popup.active { bottom: 20px; }
 
@@ -64,6 +77,11 @@
     <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand" alt="Birdie Logo">
     <strong>Birdie!</strong>
   </a>
+  <nav>
+    <a href="#produkter">Bollar</a>
+    <a href="about.html">Om oss</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
 </header>
 
 <div id="info-banner">Välkommen till Birdie!</div>
@@ -73,7 +91,6 @@
   <p>Premium golfbollar. Anderstorp.</p>
 </section>
 
-<div id="loading-spinner" style="text-align:center; padding:50px; font-weight:bold;">Hämtar aktuellt lager...</div>
 <section id="produkter" class="products"></section>
 
 <div id="sales-popup">
@@ -93,26 +110,19 @@
 
   async function fetchLager() {
     try {
-      const response = await fetch(SHEET_CSV_URL);
+      // Lägger till en slumpmässig parameter för att tvinga webbläsaren att hämta ny data (bypass cache)
+      const response = await fetch(SHEET_CSV_URL + '&cache=' + new Date().getTime());
       const data = await response.text();
       const rows = data.split('\n').filter(row => row.trim() !== '');
       
       const firstRowCols = rows[1] ? (rows[1].includes(';') ? rows[1].split(';') : rows[1].split(',')) : [];
       const clean = (t) => t ? t.trim().replace(/^"|"$/g, '') : '';
 
-      // Banner & Popup-data
+      // Uppdatera Banner
       document.getElementById('info-banner').innerText = clean(firstRowCols[10]) || "Välkommen!";
-      const saleText = clean(firstRowCols[11]);
-      if (saleText) {
-        document.getElementById('sales-text').innerText = saleText;
-        document.getElementById('sales-mins').innerText = clean(firstRowCols[12]);
-        setTimeout(() => document.getElementById('sales-popup').classList.add('active'), 3000);
-        setTimeout(() => document.getElementById('sales-popup').classList.remove('active'), 11000);
-      }
 
       const container = document.getElementById('produkter');
-      container.innerHTML = '';
-      document.getElementById('loading-spinner').style.display = 'none';
+      let htmlContent = '';
 
       rows.slice(1).forEach((row) => {
         const cols = row.includes(';') ? row.split(';') : row.split(',');
@@ -123,43 +133,50 @@
         const restockStr = clean(cols[9]);
         const isRestockUpcoming = restockStr && new Date(restockStr) > new Date();
 
-        // LOGIKEN: 
-        // Lås om lager < 12 (om det inte är påfyllning på gång)
         const isOutOfStock = stock < 12 && !isRestockUpcoming;
-        // Varna om lager är mellan 12 och 20
         const isLowStock = stock >= 12 && stock <= 20;
 
-        const card = document.createElement('div');
-        card.className = `card ${isOutOfStock ? 'out-of-stock' : ''} ${isRestockUpcoming ? 'restock-card' : ''}`;
-        
-        card.innerHTML = `
-          <div style="height:160px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; border-radius:12px; margin-bottom:15px;">
-            <img src="${clean(cols[8]) || 'https://cdn-icons-png.flaticon.com/512/5218/5218551.png'}" style="max-height:85%; max-width:85%; object-fit:contain;">
-          </div>
-          <div class="tag-container">
-            <div class="condition-tag">${clean(cols[6])}</div>
-            ${isRestockUpcoming ? `<div class="restock-tag">🕒 PÅFYLLNING: ${restockStr}</div>` : ''}
-            ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (${stock} st kvar)</div>` : (!isOutOfStock ? `<div style="background:#eee; padding:4px 10px; border-radius:6px; font-size:0.7rem;">Lager: ${stock} st</div>` : '')}
-          </div>
-          ${isOutOfStock ? `<div style="color:var(--danger); font-weight:bold; font-size:0.8rem; margin-bottom:10px;">SLUT I LAGER</div>` : ''}
-          <h3 style="margin:0 0 5px 0;">${namn}</h3>
-          <div class="price-tag">
-            <div class="price-row"><span>Styck:</span><span class="price-value">${clean(cols[2])}</span></div>
-            <div class="price-row"><span>Dussin:</span><span class="price-value">${clean(cols[3])}</span></div>
-          </div>
-          <div class="contact-btn ${isOutOfStock ? 'btn-disabled' : ''}">
-            <a href="${isOutOfStock ? '#' : 'tel:0735352482'}">${isOutOfStock ? 'Kommer snart' : 'Ring/SMS för köp'}</a>
+        htmlContent += `
+          <div class="card ${isOutOfStock ? 'out-of-stock' : ''} ${isRestockUpcoming ? 'restock-card' : ''} fade-in">
+            <div style="height:160px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; border-radius:12px; margin-bottom:15px;">
+              <img src="${clean(cols[8]) || 'https://cdn-icons-png.flaticon.com/512/5218/5218551.png'}" style="max-height:85%; max-width:85%; object-fit:contain;">
+            </div>
+            <div class="tag-container">
+              <div class="condition-tag">${clean(cols[6])}</div>
+              ${isRestockUpcoming ? `<div class="restock-tag">🕒 PÅFYLLNING: ${restockStr}</div>` : ''}
+              ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (${stock} st kvar)</div>` : (!isOutOfStock ? `<div style="background:#eee; padding:4px 10px; border-radius:6px; font-size:0.7rem;">Lager: ${stock} st</div>` : '')}
+            </div>
+            ${isOutOfStock ? `<div style="color:var(--danger); font-weight:bold; font-size:0.8rem; margin-bottom:10px;">SLUT I LAGER</div>` : ''}
+            <h3 style="margin:0 0 5px 0;">${namn}</h3>
+            <div class="price-tag">
+              <div class="price-row"><span>Styck:</span><span class="price-value">${clean(cols[2])}</span></div>
+              <div class="price-row"><span>Dussin:</span><span class="price-value">${clean(cols[3])}</span></div>
+            </div>
+            <div class="contact-btn ${isOutOfStock ? 'btn-disabled' : ''}">
+              <a href="${isOutOfStock ? '#' : 'tel:0735352482'}">${isOutOfStock ? 'Kommer snart' : 'Ring/SMS för köp'}</a>
+            </div>
           </div>
         `;
-        container.appendChild(card);
       });
 
-      const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); }); }, { threshold: 0.1 });
-      document.querySelectorAll('.card').forEach(card => observer.observe(card));
+      container.innerHTML = htmlContent;
 
-    } catch (e) { console.error(e); }
+      // Popup-logik (endast första gången)
+      if (!window.popupShown && clean(firstRowCols[11])) {
+        document.getElementById('sales-text').innerText = clean(firstRowCols[11]);
+        document.getElementById('sales-mins').innerText = clean(firstRowCols[12]);
+        setTimeout(() => document.getElementById('sales-popup').classList.add('active'), 3000);
+        window.popupShown = true;
+      }
+
+    } catch (e) { console.error("Kunde inte hämta data:", e); }
   }
+
+  // Kör direkt vid start
   fetchLager();
+
+  // Kolla efter uppdateringar var 5:e sekund (5000 ms)
+  setInterval(fetchLager, 5000);
 </script>
 </body>
 </html>
