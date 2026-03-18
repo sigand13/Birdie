@@ -19,55 +19,37 @@
 
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-light); color: var(--text-dark); overflow-x: hidden; scroll-behavior: smooth; }
 
-    /* Fixad Meny */
-    header { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      padding: 15px 40px; 
-      background: rgba(255, 255, 255, 0.95); 
-      backdrop-filter: blur(10px); 
-      box-shadow: 0 2px 15px rgba(0,0,0,0.05); 
-      position: sticky; 
-      top: 0; 
-      z-index: 1000; 
-    }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 15px 40px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
     .logo { display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; }
     .logo img { height: 60px; }
     nav { display: flex; gap: 30px; }
-    nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
-    nav a:hover { color: var(--danger); }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
 
     #info-banner { background: var(--danger); color: white; text-align: center; padding: 12px; font-weight: bold; font-size: 0.9rem; text-transform: uppercase; }
 
     .hero { height: 35vh; display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center; background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg'); background-size: cover; background-position: center 40%; color: white; }
 
-    .products { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: auto; }
+    .products { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: auto; }
     
     .card { background: var(--white); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.4s ease; display: flex; flex-direction: column; position: relative; }
-    .card.fade-in { opacity: 1; transform: translateY(0); }
     .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
-    .restock-card { border: 2px solid var(--restock) !important; }
 
-    .tag-container { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
-    .condition-tag { background: var(--success); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
-    .restock-tag { background: var(--restock); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
-    .low-stock-alert { background: var(--warning); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; animation: blinker 1.5s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.5; } }
+    /* Mängdväljare Styling */
+    .qty-selector { display: flex; background: #eee; border-radius: 10px; margin: 15px 0 10px; padding: 3px; }
+    .qty-btn { flex: 1; border: none; background: none; padding: 8px; cursor: pointer; border-radius: 8px; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
+    .qty-btn.active { background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: var(--accent); }
 
-    .price-tag { margin: 10px 0; padding: 12px; background: #f8f9fa; border-radius: 12px; flex-grow: 1; }
-    .price-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .price-value { font-weight: 800; color: var(--accent); }
+    .savings-badge { color: var(--success); font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; height: 1rem; }
 
-    .contact-btn { background: var(--accent); padding: 12px; border-radius: 10px; text-align: center; transition: 0.3s; }
-    .contact-btn a { color: white !important; text-decoration: none; font-weight: 600; display: block; }
+    .price-tag { background: #f8f9fa; padding: 12px; border-radius: 12px; margin-bottom: 15px; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; }
+    .total-price { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+
+    .contact-btn { background: var(--accent); padding: 15px; border-radius: 12px; text-align: center; transition: 0.3s; }
+    .contact-btn a { color: white !important; text-decoration: none; font-weight: 700; display: block; }
     .btn-disabled { background: #95a5a6 !important; cursor: not-allowed; }
 
-    /* Popup */
-    #sales-popup { position: fixed; bottom: -100px; left: 20px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; z-index: 2000; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 300px; border-left: 5px solid var(--success); }
-    #sales-popup.active { bottom: 20px; }
-
-    footer { text-align: center; padding: 50px; background: white; border-top: 1px solid #eee; margin-top: 50px; }
+    footer { text-align: center; padding: 50px; background: white; margin-top: 50px; }
   </style>
 </head>
 <body>
@@ -77,106 +59,122 @@
     <img src="https://i.imgur.com/uEtW7bB_d.webp?maxwidth=760&fidelity=grand" alt="Birdie Logo">
     <strong>Birdie!</strong>
   </a>
-  <nav>
-    <a href="#produkter">Bollar</a>
-    <a href="about.html">Om oss</a>
-    <a href="#kontakt">Kontakt</a>
-  </nav>
+  <nav><a href="#produkter">Bollar</a><a href="#kontakt">Kontakt</a></nav>
 </header>
 
-<div id="info-banner">Välkommen till Birdie!</div>
+<div id="info-banner">Laddar...</div>
 
 <section class="hero">
   <h2>Birdie!</h2>
-  <p>Premium golfbollar. Anderstorp.</p>
+  <p>Smartare golfbollar i Anderstorp</p>
 </section>
 
 <section id="produkter" class="products"></section>
 
-<div id="sales-popup">
-  <div style="background: #e8f6ed; padding: 10px; border-radius: 50%;">📦</div>
-  <div style="font-size: 0.85rem;">
-    <span id="sales-text"></span>
-    <span style="font-size: 0.7rem; color: #888; display: block; margin-top: 4px;">för <span id="sales-mins"></span> min sedan</span>
-  </div>
-</div>
-
 <footer id="kontakt">
-  <p>📞 <a href="tel:0735352482" style="color:inherit; text-decoration:none;">073-535 24 82</a> | Anderstorp</p>
+  <p>📞 073-535 24 82 | Anderstorp</p>
 </footer>
 
 <script>
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRt7R8D1L1dUqZPpeHEtKf78BRRHYCMekm_j0a6ttC9Dzb5kiPWh7c5bKFpGXx5CJq_ZCB-HNzQV6Pv/pub?output=csv'; 
 
+  function updatePrice(cardId, basePrice) {
+    const card = document.getElementById(cardId);
+    const selectedBtn = card.querySelector('.qty-btn.active');
+    const qty = parseInt(selectedBtn.dataset.qty);
+    const savingsEl = card.querySelector('.savings-badge');
+    const priceEl = card.querySelector('.total-price');
+    const buyLink = card.querySelector('.buy-link');
+    const bollNamn = card.dataset.name;
+
+    let totalPrice = basePrice * qty;
+    let savings = 0;
+
+    // Smart logik: Rabatt om man köper 3 dussin eller fler
+    if (qty >= 3) {
+      savings = 25; 
+      totalPrice -= savings;
+      savingsEl.innerText = `🎁 Mängdrabatt: -${savings} kr!`;
+    } else {
+      savingsEl.innerText = '';
+    }
+
+    priceEl.innerText = totalPrice + ' kr';
+    
+    // Uppdatera SMS-länken dynamiskt
+    const smsBody = `Hej Birdie! Jag vill köpa ${qty} dussin ${bollNamn} för ${totalPrice} kr. Finns de kvar?`;
+    buyLink.href = `sms:0735352482?body=${encodeURIComponent(smsBody)}`;
+  }
+
   async function fetchLager() {
     try {
-      // Lägger till en slumpmässig parameter för att tvinga webbläsaren att hämta ny data (bypass cache)
       const response = await fetch(SHEET_CSV_URL + '&cache=' + new Date().getTime());
       const data = await response.text();
       const rows = data.split('\n').filter(row => row.trim() !== '');
       
-      const firstRowCols = rows[1] ? (rows[1].includes(';') ? rows[1].split(';') : rows[1].split(',')) : [];
       const clean = (t) => t ? t.trim().replace(/^"|"$/g, '') : '';
-
-      // Uppdatera Banner
-      document.getElementById('info-banner').innerText = clean(firstRowCols[10]) || "Välkommen!";
+      document.getElementById('info-banner').innerText = clean(rows[1].split(',')[10]) || "Välkommen!";
 
       const container = document.getElementById('produkter');
-      let htmlContent = '';
+      const currentScroll = window.scrollY;
+      container.innerHTML = '';
 
-      rows.slice(1).forEach((row) => {
+      rows.slice(1).forEach((row, index) => {
         const cols = row.includes(';') ? row.split(';') : row.split(',');
         const namn = clean(cols[0]);
         if (!namn) return;
 
+        const dussinPris = parseInt(clean(cols[3]).replace(/\D/g, '')) || 0;
         const stock = parseInt(clean(cols[5])) || 0;
-        const restockStr = clean(cols[9]);
-        const isRestockUpcoming = restockStr && new Date(restockStr) > new Date();
+        const cardId = `card-${index}`;
+        const isOut = stock < 12;
 
-        const isOutOfStock = stock < 12 && !isRestockUpcoming;
-        const isLowStock = stock >= 12 && stock <= 20;
+        const card = document.createElement('div');
+        card.id = cardId;
+        card.className = `card ${isOut ? 'out-of-stock' : ''}`;
+        card.dataset.name = namn;
 
-        htmlContent += `
-          <div class="card ${isOutOfStock ? 'out-of-stock' : ''} ${isRestockUpcoming ? 'restock-card' : ''} fade-in">
-            <div style="height:160px; display:flex; align-items:center; justify-content:center; background:#f9f9f9; border-radius:12px; margin-bottom:15px;">
-              <img src="${clean(cols[8]) || 'https://cdn-icons-png.flaticon.com/512/5218/5218551.png'}" style="max-height:85%; max-width:85%; object-fit:contain;">
-            </div>
-            <div class="tag-container">
-              <div class="condition-tag">${clean(cols[6])}</div>
-              ${isRestockUpcoming ? `<div class="restock-tag">🕒 PÅFYLLNING: ${restockStr}</div>` : ''}
-              ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (${stock} st kvar)</div>` : (!isOutOfStock ? `<div style="background:#eee; padding:4px 10px; border-radius:6px; font-size:0.7rem;">Lager: ${stock} st</div>` : '')}
-            </div>
-            ${isOutOfStock ? `<div style="color:var(--danger); font-weight:bold; font-size:0.8rem; margin-bottom:10px;">SLUT I LAGER</div>` : ''}
-            <h3 style="margin:0 0 5px 0;">${namn}</h3>
-            <div class="price-tag">
-              <div class="price-row"><span>Styck:</span><span class="price-value">${clean(cols[2])}</span></div>
-              <div class="price-row"><span>Dussin:</span><span class="price-value">${clean(cols[3])}</span></div>
-            </div>
-            <div class="contact-btn ${isOutOfStock ? 'btn-disabled' : ''}">
-              <a href="${isOutOfStock ? '#' : 'tel:0735352482'}">${isOutOfStock ? 'Kommer snart' : 'Ring/SMS för köp'}</a>
+        card.innerHTML = `
+          <div style="height:150px; display:flex; align-items:center; justify-content:center;">
+            <img src="${clean(cols[8]) || ''}" style="max-height:100%; max-width:80%;">
+          </div>
+          <h3 style="margin:10px 0 5px;">${namn}</h3>
+          
+          <div class="qty-selector">
+            <button class="qty-btn active" data-qty="1" onclick="selectQty('${cardId}', this, ${dussinPris})">1 dussin</button>
+            <button class="qty-btn" data-qty="2" onclick="selectQty('${cardId}', this, ${dussinPris})">2 dussin</button>
+            <button class="qty-btn" data-qty="3" onclick="selectQty('${cardId}', this, ${dussinPris})">3 dussin</button>
+          </div>
+
+          <div class="savings-badge"></div>
+          
+          <div class="price-tag">
+            <div class="price-row">
+              <span style="font-size:0.9rem; color:#666;">Totalt pris:</span>
+              <span class="total-price">${dussinPris} kr</span>
             </div>
           </div>
+
+          <div class="contact-btn ${isOut ? 'btn-disabled' : ''}">
+            <a href="#" class="buy-link">${isOut ? 'Kommer snart' : 'Köp via SMS 💬'}</a>
+          </div>
         `;
+        container.appendChild(card);
+        updatePrice(cardId, dussinPris);
       });
-
-      container.innerHTML = htmlContent;
-
-      // Popup-logik (endast första gången)
-      if (!window.popupShown && clean(firstRowCols[11])) {
-        document.getElementById('sales-text').innerText = clean(firstRowCols[11]);
-        document.getElementById('sales-mins').innerText = clean(firstRowCols[12]);
-        setTimeout(() => document.getElementById('sales-popup').classList.add('active'), 3000);
-        window.popupShown = true;
-      }
-
-    } catch (e) { console.error("Kunde inte hämta data:", e); }
+      window.scrollTo(0, currentScroll);
+    } catch (e) { console.error(e); }
   }
 
-  // Kör direkt vid start
-  fetchLager();
+  function selectQty(cardId, btn, basePrice) {
+    const card = document.getElementById(cardId);
+    card.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updatePrice(cardId, basePrice);
+  }
 
-  // Kolla efter uppdateringar var 5:e sekund (5000 ms)
-  setInterval(fetchLager, 5000);
+  fetchLager();
+  setInterval(fetchLager, 10000); // Scannar var 10:e sek för att inte störa användaren för ofta
 </script>
 </body>
 </html>
