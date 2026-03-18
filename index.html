@@ -45,7 +45,6 @@
     nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: 0.3s; }
     nav a:hover { color: var(--danger); }
 
-    /* Frakt-banner */
     .no-shipping-banner {
       background: var(--danger);
       color: white;
@@ -57,17 +56,18 @@
       letter-spacing: 1px;
     }
 
-    /* Hero - JUSTERAD HÄR */
+    /* HERO - FIXAD BILD POSITION */
     .hero {
-      height: 100vh; /* Något högre för att se mer av bilden */
+      height: 45vh; 
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       text-align: center;
-      /* Ändrat från 'center' till 'center 20%' för att sänka ner bilden */
-      background: url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg') center 20%/cover no-repeat;
-      background-attachment: fixed;
+      /* Vi tar bort fixed och fokuserar på 40% från toppen för att se golfaren */
+      background: url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg') no-repeat;
+      background-size: cover;
+      background-position: 50% 40%; 
       color: white;
       position: relative;
     }
@@ -257,7 +257,6 @@
 </footer>
 
 <script>
-  // Scroll-animation
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) entry.target.classList.add('show');
@@ -265,7 +264,6 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.card').forEach(card => observer.observe(card));
 
-  // FAQ-klick
   document.querySelectorAll('.faq-question').forEach(q => {
     q.addEventListener('click', () => {
       q.parentElement.classList.toggle('active');
