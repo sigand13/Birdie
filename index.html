@@ -14,6 +14,7 @@
       --success: #27ae60;
       --gold: #f1c40f;
       --warning: #ff7675;
+      --restock: #3498db;
     }
 
     body { 
@@ -127,9 +128,16 @@
       font-size: 0.7rem; font-weight: bold; text-transform: uppercase;
     }
 
-    .stock-tag {
-      background: #eee; color: #555; padding: 4px 10px; border-radius: 6px;
-      font-size: 0.7rem; font-weight: bold;
+    .stock-tag { background: #eee; color: #555; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
+
+    .restock-tag {
+      background: var(--restock);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      text-transform: uppercase;
     }
 
     .low-stock-alert {
@@ -144,27 +152,29 @@
 
     @keyframes blinker { 50% { opacity: 0.5; } }
 
-    .deal-card { border: 2px solid var(--gold) !important; background: #fffdf5 !important; }
     .deal-badge {
       position: absolute; top: -12px; right: 15px; background: var(--gold); color: #000;
       padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; z-index: 10;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       animation: pulse 2s infinite;
     }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-    .out-of-stock { opacity: 0.6; filter: grayscale(1); pointer-events: none; }
-    .out-of-stock-label { color: var(--danger); font-weight: bold; margin-bottom: 10px; }
+    .out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
+    
+    /* Blå ram om påfyllning är på väg */
+    .restock-card { border: 2px solid var(--restock) !important; }
 
     .price-tag { margin: 10px 0; padding: 12px; background: #f8f9fa; border-radius: 12px; flex-grow: 1; }
     .price-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
     .price-value { font-weight: 800; color: var(--accent); }
     .old-price { font-size: 0.8rem; color: #999; text-decoration: line-through; display: block; margin-bottom: 2px; }
     
-    .contact-btn { 
-      background: var(--accent); padding: 12px; border-radius: 10px; text-align: center; transition: 0.3s;
-    }
+    .contact-btn { background: var(--accent); padding: 12px; border-radius: 10px; text-align: center; transition: 0.3s; }
     .contact-btn a { color: white !important; text-decoration: none; font-weight: 600; display: block; }
+    .contact-btn:hover { background: #34495e; }
+    
+    /* Grå knapp endast om lagret är HELT slut och påfyllning väntar */
+    .btn-disabled { background: #95a5a6 !important; cursor: not-allowed; }
 
     footer { text-align: center; padding: 50px; background: white; border-top: 1px solid #eee; }
   </style>
@@ -213,7 +223,6 @@
       const data = await response.text();
       const rows = data.split('\n').filter(row => row.trim() !== '');
       
-      // Hämta Banner-text från rad 2, kolumn K (index 10)
       const bannerCols = rows[1] ? (rows[1].includes(';') ? rows[1].split(';') : rows[1].split(',')) : [];
       const bannerText = bannerCols[10] ? bannerCols[10].replace(/^"|"$/g, '').trim() : "Välkommen till Birdie!";
       document.getElementById('info-banner').innerText = bannerText;
@@ -223,14 +232,15 @@
       container.innerHTML = '';
       document.getElementById('loading-spinner').style.display = 'none';
 
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
       productRows.forEach((row) => {
         const columns = row.includes(';') ? row.split(';') : row.split(',');
         const clean = (t) => t ? t.trim().replace(/^"|"$/g, '') : '';
         
         const namn = clean(columns[0]);
-        
-        // SÄKERHETSSPÄRR: Om namnet är tomt, hoppa över raden
-        if (!namn || namn === "") return;
+        if (!namn) return;
 
         const nypris = clean(columns[1]);
         const styck = clean(columns[2]);
@@ -239,17 +249,25 @@
         const lager = clean(columns[5]);
         const skick = clean(columns[6]);
         const special = clean(columns[7]); 
-        const bildUrl = clean(columns[8]); 
+        const bildUrl = clean(columns[8]);
+        const restockDatumStr = clean(columns[9]); 
 
-        const isOutOfStock = lager.toLowerCase().includes('slut') || lager === '0';
+        // Restock-logik
+        let isRestockUpcoming = false;
+        if (restockDatumStr) {
+          const restockDate = new Date(restockDatumStr);
+          if (restockDate > today) isRestockUpcoming = true;
+        }
+
+        const isOutOfStock = (lager.toLowerCase().includes('slut') || lager === '0');
         const stockCount = parseInt(lager);
         const isLowStock = !isNaN(stockCount) && stockCount > 0 && stockCount <= 10;
-        
         const isDeal = special.toLowerCase() === 'deal';
         const finalImg = bildUrl || 'https://cdn-icons-png.flaticon.com/512/5218/5218551.png';
 
         const card = document.createElement('div');
-        card.className = `card ${isOutOfStock ? 'out-of-stock' : ''} ${isDeal ? 'deal-card' : ''}`;
+        // Lägg till blå ram om det planeras en påfyllning
+        card.className = `card ${isOutOfStock ? 'out-of-stock' : ''} ${isRestockUpcoming ? 'restock-card' : ''}`;
         card.setAttribute('data-category', kat.toLowerCase());
 
         card.innerHTML = `
@@ -259,7 +277,8 @@
           </div>
           
           <div class="tag-container">
-            ${skick ? `<div class="condition-tag">${skick}</div>` : ''}
+            <div class="condition-tag">${skick}</div>
+            ${isRestockUpcoming ? `<div class="restock-tag">🕒 PÅFYLLNING: ${restockDatumStr}</div>` : ''}
             ${!isOutOfStock && !isLowStock && !isNaN(stockCount) ? `<div class="stock-tag">Finns ${lager} st</div>` : ''}
             ${isLowStock ? `<div class="low-stock-alert">🔥 Snart slut! (Finns ${lager} st)</div>` : ''}
           </div>
@@ -269,23 +288,23 @@
           <h3 style="margin: 0 0 8px 0; font-size: 1.25rem;">${namn}</h3>
           <span class="old-price">${nypris.includes('ca') ? nypris : 'Nypris ca ' + nypris}</span>
           
-          <div class="price-tag" ${isDeal ? 'style="background: #fff9e6; border: 1px solid #f1c40f;"' : ''}>
+          <div class="price-tag">
             <div class="price-row"><span>Boll:</span><span class="price-value">${styck}</span></div>
             <div class="price-row"><span>Dussin:</span><span class="price-value">${dussin}</span></div>
           </div>
-          <div class="contact-btn"><a href="tel:0735352482">${isOutOfStock ? 'Slut' : 'Ring/SMS för köp'}</a></div>
+
+          <div class="contact-btn ${isOutOfStock ? 'btn-disabled' : ''}">
+            <a href="${isOutOfStock ? '#' : 'tel:0735352482'}">
+              ${isOutOfStock ? 'Kommer snart' : 'Ring/SMS för köp'}
+            </a>
+          </div>
         `;
         container.appendChild(card);
       });
 
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); });
-      }, { threshold: 0.1 });
+      const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('show'); }); }, { threshold: 0.1 });
       document.querySelectorAll('.card').forEach(card => observer.observe(card));
-
-    } catch (error) {
-      document.getElementById('loading-spinner').innerText = "Kunde inte ladda lagret.";
-    }
+    } catch (error) { document.getElementById('loading-spinner').innerText = "Kunde inte ladda lagret."; }
   }
 
   function filterBolls(category, btn) {
