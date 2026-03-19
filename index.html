@@ -12,11 +12,12 @@
       --white: #ffffff;
       --danger: #e74c3c;
       --success: #27ae60;
+      --warning: #f39c12;
       --restock: #3498db;
       --sold: #f1c40f;
     }
 
-    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-light); color: var(--text-dark); }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-light); color: var(--text-dark); scroll-behavior: smooth; }
 
     header { 
       display: flex; align-items: center; justify-content: space-between; padding: 15px 40px; 
@@ -28,27 +29,38 @@
     nav { display: flex; gap: 25px; }
     nav a { text-decoration: none; color: var(--text-dark); font-weight: 600; }
 
-    #info-banner { background: var(--danger); color: white; text-align: center; padding: 12px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+    #info-banner { background: var(--danger); color: white; text-align: center; padding: 12px; font-weight: bold; font-size: 0.9rem; min-height: 20px; transition: 0.3s; }
 
     .hero {
-      height: 30vh; display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;
+      height: 25vh; display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;
       background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('https://cdn.pixabay.com/photo/2025/05/13/16/10/golf-9597900_1280.jpg');
       background-size: cover; background-position: center 40%; color: white;
     }
 
+    /* Klass-förklaring */
+    .class-info { max-width: 1000px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+    .class-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 4px solid #ddd; }
+    .class-card h4 { margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px; }
+    .class-card.a { border-color: var(--success); }
+    .class-card.b { border-color: var(--warning); }
+    .class-card.c { border-color: var(--accent); }
+
     .products { padding: 30px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: auto; }
     
-    .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.5s ease; }
+    .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: 0.5s ease; position: relative; }
     .card.out-of-stock { opacity: 0.6; filter: grayscale(0.8); }
 
-    .tag-container { display: flex; gap: 8px; margin-bottom: 12px; }
-    .tag { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; transition: 0.5s; }
-    .tag-skick { background: var(--success); color: white; }
-    .tag-lager { background: #eee; color: #666; }
+    .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .tag { padding: 5px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; transition: 0.5s; }
+    
+    .tag-a { background: var(--success); color: white; }
+    .tag-b { background: var(--warning); color: white; }
+    .tag-c { background: #95a5a6; color: white; }
+    .tag-status { background: #eee; color: #666; }
 
-    /* Animationer för lagerändring */
-    .flash-restock { background: var(--restock) !important; color: white !important; transform: scale(1.1); }
-    .flash-sold { background: var(--sold) !important; color: white !important; transform: scale(1.1); }
+    /* Animationer */
+    .flash-restock { background: var(--restock) !important; color: white !important; transform: scale(1.05); }
+    .flash-sold { background: var(--sold) !important; color: white !important; transform: scale(1.05); }
 
     .unit-toggle { display: flex; background: #f0f0f0; border-radius: 12px; padding: 4px; margin-bottom: 15px; gap: 4px; }
     .unit-btn { flex: 1; border: none; background: none; padding: 10px; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 0.8rem; transition: 0.2s; }
@@ -59,11 +71,9 @@
 
     .price-display { background: var(--accent); color: white; padding: 20px; border-radius: 18px; margin-bottom: 15px; text-align: center; }
     .total-amt { display: block; font-size: 1.8rem; font-weight: 900; }
-    .savings-msg { font-size: 0.8rem; color: var(--success); font-weight: bold; background: white; padding: 3px 10px; border-radius: 6px; display: inline-block; margin-top: 8px; min-height: 1.2rem; }
 
     .contact-btn { background: var(--success); padding: 18px; border-radius: 15px; text-align: center; transition: 0.3s; }
     .contact-btn a { color: white !important; text-decoration: none; font-weight: 800; display: block; width: 100%; }
-    .btn-disabled { background: #bdc3c7 !important; pointer-events: none; }
 
     footer { text-align: center; padding: 40px; background: white; border-top: 1px solid #eee; margin-top: 50px; }
     .footer-links { margin-top: 10px; display: flex; justify-content: center; gap: 20px; font-size: 0.8rem; color: #999; }
@@ -73,7 +83,7 @@
 
 <header>
   <a href="index.html" class="logo">
-    <img src="https://i.imgur.com/mDvs8Wv.png">
+    <img src="https://i.imgur.com/mDvs8Wv.png" alt="Logo">
     <strong>Birdie!</strong>
   </a>
   <nav><a href="#produkter">Bollar</a><a href="about.html">Om oss</a></nav>
@@ -83,7 +93,22 @@
 
 <section class="hero">
   <h2>Birdie!</h2>
-  <p>Live-lager direkt från Anderstorp</p>
+  <p>Bollar direkt från Anderstorp</p>
+</section>
+
+<section class="class-info">
+  <div class="class-card a">
+    <h4><span class="tag tag-a">Klass A</span> Tour-premium</h4>
+    <p style="font-size: 0.85rem; margin:0; color:#666;">Bästa bollarna (Pro V1 etc). Maximal spinn och kontroll.</p>
+  </div>
+  <div class="class-card b">
+    <h4><span class="tag tag-b">Klass B</span> Premium-mix</h4>
+    <p style="font-size: 0.85rem; margin:0; color:#666;">Hög kvalitet för medelgolfaren. Bra balans.</p>
+  </div>
+  <div class="class-card c">
+    <h4><span class="tag tag-c">Klass C</span> Träning</h4>
+    <p style="font-size: 0.85rem; margin:0; color:#666;">Prisvärda bollar för mängdträning.</p>
+  </div>
 </section>
 
 <section id="produkter" class="products"></section>
@@ -97,63 +122,38 @@
 </footer>
 
 <script>
+  // Denna URL tvingar Google att skicka ny data varje gång
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRt7R8D1L1dUqZPpeHEtKf78BRRHYCMekm_j0a6ttC9Dzb5kiPWh7c5bKFpGXx5CJq_ZCB-HNzQV6Pv/pub?output=csv'; 
   let currentStockData = {};
 
-  function parseNum(v) { return parseInt(v.toString().replace(/\D/g, '')) || 0; }
-
-  function calculate(id, dPrice, stock) {
-    const card = document.getElementById(id);
-    if(!card) return;
-    const isDussin = card.querySelector('.unit-btn.active').dataset.unit === 'dussin';
-    const input = card.querySelector('.qty-input');
-    const sPrice = Math.round(dPrice / 12);
-    
-    let qty = parseInt(input.value) || 0;
-    const max = isDussin ? Math.floor(stock / 12) : stock;
-
-    if (qty > max) { qty = max; input.value = max; }
-    if (qty < 0) { qty = 0; input.value = 0; }
-
-    let total = isDussin ? (dPrice * qty) : (sPrice * qty);
-    let savings = (isDussin && qty >= 3) ? 25 : 0;
-    total -= savings;
-
-    card.querySelector('.total-amt').innerText = total + ' kr';
-    card.querySelector('.savings-msg').innerText = savings > 0 ? `🎉 Mängdrabatt: -${savings} kr` : '';
-    
-    const buyLink = card.querySelector('.buy-link');
-    if (qty > 0 && stock >= 1) {
-      const unitLabel = isDussin ? "dussin" : "styck";
-      const msg = `Hej Birdie! Jag vill köpa ${qty} ${unitLabel} ${card.dataset.name} för ${total} kr.`;
-      buyLink.href = `sms:0735352482?body=${encodeURIComponent(msg)}`;
-      card.querySelector('.contact-btn').classList.remove('btn-disabled');
-    } else {
-      card.querySelector('.contact-btn').classList.add('btn-disabled');
-    }
-  }
-
   async function fetchLager() {
     try {
-      const res = await fetch(SHEET_CSV_URL + '&t=' + new Date().getTime());
-      const data = await res.text();
+      // Vi lägger till en slumpmässig siffra i slutet för att lura Google att inte skicka en gammal sparad fil
+      const response = await fetch(`${SHEET_CSV_URL}&t=${new Date().getTime()}`);
+      if (!response.ok) throw new Error('Kunde inte hämta data');
+      
+      const data = await response.text();
       const rows = data.split('\n').filter(r => r.trim() !== '');
       const clean = (t) => t ? t.trim().replace(/^"|"$/g, '') : '';
       
-      const bannerText = clean(rows[1].split(',')[10]);
-      const bannerEl = document.getElementById('info-banner');
-      if(bannerEl.innerText !== bannerText) bannerEl.innerText = bannerText || "Välkommen!";
+      // Banner-text från K2
+      const firstDataRow = rows[1].split(',');
+      document.getElementById('info-banner').innerText = clean(firstDataRow[10]) || "Välkommen!";
 
       const container = document.getElementById('produkter');
 
       rows.slice(1).forEach((row, i) => {
-        const cols = row.includes(';') ? row.split(';') : row.split(',');
-        const namn = clean(cols[0]), dPrice = parseNum(cols[3]), lager = parseNum(cols[5]), cardId = `c-${i}`;
-        if (!namn) return;
+        const cols = row.split(',');
+        const namn = clean(cols[0]);
+        if (!namn || namn === "Namn") return;
+
+        const dPrice = parseInt(clean(cols[3])) || 0;
+        const lager = parseInt(clean(cols[5])) || 0;
+        const skick = clean(cols[6]);
+        const img = clean(cols[8]);
+        const cardId = `c-${i}`;
 
         let card = document.getElementById(cardId);
-        
-        // Om kortet inte finns, skapa det en gång
         if (!card) {
           card = document.createElement('div');
           card.id = cardId;
@@ -161,11 +161,11 @@
           card.dataset.name = namn;
           card.innerHTML = `
             <div style="height:140px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; background:#f9f9f9; border-radius:12px;">
-              <img src="${clean(cols[8]) || ''}" style="max-height:85%; max-width:85%; object-fit:contain;">
+              <img src="${img}" style="max-height:85%; max-width:85%; object-fit:contain;" onerror="this.src='https://i.imgur.com/mDvs8Wv.png'">
             </div>
             <div class="tag-container">
-              <span class="tag tag-skick">${clean(cols[6])}</span>
-              <span class="tag tag-lager">Lager: ${lager} st</span>
+              <span class="tag ${skick.includes('A')?'tag-a':skick.includes('B')?'tag-b':'tag-c'}">${skick}</span>
+              <span class="tag tag-status">Lager: ${lager} st</span>
             </div>
             <h3 style="margin:0 0 15px 0;">${namn}</h3>
             <div class="unit-toggle">
@@ -173,40 +173,33 @@
               <button class="unit-btn" data-unit="styck" onclick="changeUnit('${cardId}', this, ${dPrice}, ${lager})">Styck</button>
             </div>
             <div class="qty-box">
-              <span style="font-size:0.8rem; font-weight:bold; color:#999;">Antal:</span>
-              <input type="number" class="qty-input" value="1" oninput="calculate('${cardId}', ${dPrice}, ${lager})">
-              <span class="unit-txt" style="font-size:0.8rem; font-weight:bold; color:var(--accent);">dussin</span>
+              <input type="number" class="qty-input" value="${lager>0?1:0}" oninput="calculate('${cardId}', ${dPrice}, ${lager})">
+              <span class="unit-txt" style="font-weight:bold; color:var(--accent);">dussin</span>
             </div>
-            <div class="price-display">
-              <span style="font-size:0.8rem; opacity:0.8;">Totalt att betala:</span>
-              <span class="total-amt">${dPrice} kr</span>
-              <div class="savings-msg"></div>
-            </div>
-            <div class="contact-btn"><a class="buy-link">Beställ via SMS 💬</a></div>
+            <div class="price-display"><span class="total-amt">0 kr</span></div>
+            <div class="contact-btn"><a class="buy-link">SMS:a Beställning</a></div>
           `;
           container.appendChild(card);
         }
 
-        // Uppdatera värden om de ändrats
-        const oldLager = currentStockData[cardId] || lager;
-        const lagerTag = card.querySelector('.tag-lager');
-        
-        if (oldLager !== lager) {
+        // Animation vid lagerändring
+        const oldLager = currentStockData[cardId];
+        const lagerTag = card.querySelector('.tag-status');
+        if (oldLager !== undefined && oldLager !== lager) {
           lagerTag.innerText = `Lager: ${lager} st`;
-          // Effekt
-          const effectClass = lager > oldLager ? 'flash-restock' : 'flash-sold';
-          lagerTag.classList.add(effectClass);
-          setTimeout(() => lagerTag.classList.remove(effectClass), 2000);
+          const anim = lager > oldLager ? 'flash-restock' : 'flash-sold';
+          lagerTag.classList.add(anim);
+          setTimeout(() => lagerTag.classList.remove(anim), 2000);
         }
-
-        card.classList.toggle('out-of-stock', lager < 12);
-        const buyBtnText = card.querySelector('.buy-link');
-        buyBtnText.innerText = lager < 1 ? 'HELT SLUT' : (lager < 12 ? 'FÅ KVAR - SMSA' : 'Beställ via SMS 💬');
-
+        
+        card.classList.toggle('out-of-stock', lager < 1);
         currentStockData[cardId] = lager;
         calculate(cardId, dPrice, lager);
       });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error('Lagerfel:', e);
+      document.getElementById('info-banner').innerText = "⚠️ Kunde inte synka lagret just nu, kontakta oss på ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎      073-535 24 82";
+    }
   }
 
   function changeUnit(id, btn, p, s) {
@@ -217,8 +210,27 @@
     calculate(id, p, s);
   }
 
+  function calculate(id, dPrice, stock) {
+    const card = document.getElementById(id);
+    const isDussin = card.querySelector('.unit-btn.active').dataset.unit === 'dussin';
+    const input = card.querySelector('.qty-input');
+    let qty = parseInt(input.value) || 0;
+    
+    // Förhindra att man beställer mer än vad som finns
+    const max = isDussin ? Math.floor(stock / 12) : stock;
+    if (qty > max && stock > 0) { qty = max; input.value = max; }
+
+    const price = isDussin ? dPrice : Math.round(dPrice / 12);
+    const total = price * qty;
+    
+    card.querySelector('.total-amt').innerText = total + " kr";
+    const msg = `Hej! Vill köpa ${qty} ${isDussin?'dussin':'st'} ${card.dataset.name} för ${total} kr.`;
+    card.querySelector('.buy-link').href = `sms:0735352482?body=${encodeURIComponent(msg)}`;
+  }
+
+  // Starta hämtning direkt och sedan var 15:e sekund
   fetchLager();
-  setInterval(fetchLager, 5000);
+  setInterval(fetchLager, 15000);
 </script>
 </body>
 </html>
